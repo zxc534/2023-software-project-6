@@ -33,7 +33,7 @@ public class OrderPanel extends JPanel{
 		
 	}
 	
-	public OrderPanel(String id, String name, String date, String price, String address ,String[][] items) {
+	public OrderPanel(String id, String name, String date, String price, String address ,Item[] items) {
 		idLabel = new MyLabel(id,130, 90);
 		nameLabel = new MyLabel(name,130, 90);
 		dateLabel = new MyLabel(date,130, 90);
@@ -43,11 +43,12 @@ public class OrderPanel extends JPanel{
 		itemScrollPanel.setPreferredSize(new Dimension(360, 90));
 		itemPanel.setLayout(new GridLayout(0,1));
 		itemPanels = new ItemPanel[items.length];
-		for(int i=0;i<items.length;i++) {
+		
+		for(int i=0;items[i] != null;i++) {
 			itemPanels[i] = new ItemPanel(items[i]);
 			itemPanels[i].setBorder(blackline);
 		}
-		for(int i=0;i<items.length;i++) {
+		for(int i=0;items[i] != null;i++) {
 			itemPanel.add(itemPanels[i]);
 		}
 		

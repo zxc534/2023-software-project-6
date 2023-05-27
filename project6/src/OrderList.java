@@ -1,14 +1,11 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OrderList {
-	final int MAX_ORDER = 50;
-	
-	Order [] arr = new Order[MAX_ORDER];
-	//Order List에 들어있는 Order의 개수 count 위한 변수
-	int length = 0;
+	ArrayList<Order> arr = new ArrayList<Order>();
 	
 	public OrderList() {
 	}
@@ -33,8 +30,7 @@ public class OrderList {
 					//InvalidInputException을 받음
 					try {	
 						String[] tokens = line.split("::",0);
-				        this.arr[this.length] = new Order(tokens);
-				        this.length++;
+				        arr.add(new Order(tokens));
 					} catch(InvalidValueException e) {
 						e.print(line);
 					}
@@ -50,11 +46,11 @@ public class OrderList {
 	}
 	
 	public int numOrders() {
-		return this.length;
+		return this.arr.size();
 	}
 	
 	public Order getOrder(int i) { 	//return ith Order
-		return this.arr[i];
+		return this.arr.get(i);
 	}
 	
 	public void sortByCustomer() {

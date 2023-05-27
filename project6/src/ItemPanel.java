@@ -9,23 +9,25 @@ public class ItemPanel extends JPanel {
 	private MyLabel itemPrice;
 	private JComboBox<String> itemStatus ;
 	
-	private static String[] status = new String[] {"SHIPPED","RETURNED","CANCELED","DELIVERED"};
+	private static String[] status = new String[] {"PREPARING","SHIPPED","RETURNED","CANCELED","DELIVERED"};
 	
-	public ItemPanel(String [] item) {
-		itemId = new MyLabel(item[0],70, 40);
-		itemName = new MyLabel(item[1],70, 40);
-		itemPrice = new MyLabel(item[2],70, 40);
+	public ItemPanel(Item item) {
+		itemId = new MyLabel(""+item.ID,70, 40);
+		itemName = new MyLabel(item.name,70, 40);
+		itemPrice = new MyLabel(""+item.price,70, 40);
 		itemStatus = new JComboBox<String>(status);
 		
-		char statChar = item[3].charAt(0);
-		if(statChar =='S') {
+		char statChar = item.state.charAt(0);
+		if(statChar =='P') {
 			itemStatus.setSelectedIndex(0);
-		} else if (statChar == 'R') {
+		} else if(statChar =='S') {
 			itemStatus.setSelectedIndex(1);
 		} else if (statChar == 'R') {
 			itemStatus.setSelectedIndex(2);
-		} else {
+		} else if (statChar == 'C') {
 			itemStatus.setSelectedIndex(3);
+		} else {
+			itemStatus.setSelectedIndex(4);
 		}
 		itemStatus.setPreferredSize(new Dimension(90, 40));
 		

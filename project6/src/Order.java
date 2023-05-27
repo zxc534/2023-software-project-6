@@ -18,7 +18,7 @@ public class Order {
 	String name;
 	LocalDateTime time;
 	int price;
-	Product [] pArr = new Product [MAX_PRODUCT];
+	Item [] itemArr = new Item [MAX_PRODUCT];
 	String adress;
 	
 	public Order(String[] fields) throws InvalidValueException{
@@ -40,8 +40,8 @@ public class Order {
 		String[] t = str.split(":",0);
         for(int i=0; i < t.length; i++){
             String[] e = t[i].split(";",4);
-            Product p = new Product(e);
-            pArr[i] = p;
+            Item p = new Item(e);
+            itemArr[i] = p;
         }
 	}
 	
@@ -52,8 +52,8 @@ public class Order {
 		System.out.println("total: " + this.price);
 	  //System.out.print("----ID00--PRICE000--NAME000000--STATE00000\n");
 		System.out.print("    ID    PRICE     NAME        STATE     \n");
-		for(int i=0;pArr[i] != null;i++) {
-			Product p = pArr[i];
+		for(int i=0;itemArr[i] != null;i++) {
+			Item p = itemArr[i];
 			System.out.printf("%-2d  %4d  %-8d  %-10s  %s\n",i,p.ID,p.price,p.name,p.state);
 		}
 		System.out.println();

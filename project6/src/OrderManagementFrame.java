@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class OrderManagementFrame extends JFrame{
+	//project 3 part
+	private OrderList OL = new OrderList("Order-normal.txt");
+	
+	//project 5 part
 	private boolean isAddOpen = false;
 	
 	private JPanel mainPanel = new JPanel();
@@ -104,9 +108,12 @@ public class OrderManagementFrame extends JFrame{
 				}
 			}
 		});
+		
+
 	}
 	
 	public void addTestOrders() {
+		/*
 		//202301030910010:: Park :: 2023-01-03_09:10 :: 10000 :: 1001;Apple;10000;SHIPPED  :: CAU
 		//202302101310001  :: Kim :: 2023-02-10_13:10 :: 30000 :: 2005;T-Shirt;20000;CANCELED : 1001;Apple;10000;DELIVERED :: Dept. Software
 		//202301101730010:: Lee :: 2023-01-10_17:30 :: 5000 :: 3001;Pencil;5000; RETURNED :: Seoul
@@ -119,5 +126,22 @@ public class OrderManagementFrame extends JFrame{
 		ordersPanel.add(new OrderPanel("202302101310001","Kim","2023-02-10_13:10","30000","Dept. Software",items1));
 		ordersPanel.add(new OrderPanel("202301101730010","Lee","2023-01-10_17:30","5000","Seoul",items1));
 		ordersPanel.revalidate();
+		*/
+	}
+	
+	public void addOrderPanel(String id, String name, String date, String price, String address, Item[] items) {
+		OrderPanel tempOP = new OrderPanel(id, name, date, price, address, items);
+		ordersPanel.add(tempOP);
+		ordersPanel.revalidate();
+	}
+	
+	public void readOrders() {
+		Order tempO;
+		for(int i =0;i<OL.numOrders();i++) {
+			tempO = OL.getOrder(i);
+			//tempO.print();
+			addOrderPanel(tempO.ID,tempO.name,tempO.time.toString(),"" + tempO.price,tempO.adress,tempO.itemArr);
+			//System.out.println("add "+i+" order panel");
+		}
 	}
 }
