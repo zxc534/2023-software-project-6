@@ -5,6 +5,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
 
+@SuppressWarnings("serial")
 public class MyLabel extends JLabel{
 	private static Border blackline = BorderFactory.createLineBorder(Color.black);
 	

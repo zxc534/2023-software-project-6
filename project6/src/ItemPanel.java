@@ -3,19 +3,26 @@ import java.awt.Dimension;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class ItemPanel extends JPanel {
+	Item srcItem;
+	
 	private MyLabel itemId;
 	private MyLabel itemName;
 	private MyLabel itemPrice;
 	private JComboBox<String> itemStatus ;
 	
 	private static String[] status = new String[] {"PREPARING","SHIPPED","RETURNED","CANCELED","DELIVERED"};
-	
+
 	public ItemPanel(Item item) {
-		itemId = new MyLabel(""+item.ID,70, 40);
+		srcItem = item;
+		
+		itemId = new MyLabel(item.ID,70, 40);
 		itemName = new MyLabel(item.name,70, 40);
-		itemPrice = new MyLabel(""+item.price,70, 40);
+		itemPrice = new MyLabel(item.price,70, 40);
 		itemStatus = new JComboBox<String>(status);
+		
+		itemStatus.setEnabled(false);
 		
 		char statChar = item.state.charAt(0);
 		if(statChar =='P') {
@@ -35,5 +42,13 @@ public class ItemPanel extends JPanel {
 		add(itemName);
 		add(itemPrice);
 		add(itemStatus);
+	}
+	
+	public void setEditable(boolean b){
+		itemStatus.setEnabled(b);
+	}
+	
+	public String getStatus() {
+		return new String((String)itemStatus.getSelectedItem());
 	}
 }

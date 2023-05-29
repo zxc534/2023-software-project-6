@@ -2,6 +2,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class OrderList {
@@ -45,6 +46,12 @@ public class OrderList {
 		
 	}
 	
+	public void print() {
+		for(int i=0;i<arr.size();i++) {
+			getOrder(i).print();
+		}
+	}
+	
 	public int numOrders() {
 		return this.arr.size();
 	}
@@ -54,9 +61,28 @@ public class OrderList {
 	}
 	
 	public void sortByCustomer() {
-		System.out.println("");
+		arr.sort(new OrderNameComparator());
+		System.out.println("sorted by customer name");
+		//print();
 	}
 	public void sortByDate() {
-		System.out.println("");
+		arr.sort(new OrderDateComparator());
+		System.out.println("sorted by date");
+		//print();
 	}
+
+	class OrderNameComparator implements Comparator<Order>{
+		@Override
+		public int compare(Order o1, Order o2) {
+	        return o1.name.compareTo(o2.name);
+	    }
+	}
+	
+	class OrderDateComparator implements Comparator<Order>{
+		@Override
+		public int compare(Order o1, Order o2) {
+	        return o1.time.compareTo(o2.time);
+	    }
+	}
+	
 }

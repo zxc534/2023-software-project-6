@@ -1,5 +1,7 @@
 
 public class Main {
+	public static final int MAX_ITEM = 50;
+	public static OrderManagementFrame mainFrame;
 	
 	public static void main(String[] args) {
 		//project3 test code
@@ -17,7 +19,7 @@ public class Main {
 		*/
 		
 		// project5 test code
-		OrderManagementFrame mainFrame = new OrderManagementFrame();
+		mainFrame = new OrderManagementFrame();
 		//mainFrame.addTestOrders();
 		mainFrame.readOrders();
 	}

@@ -5,19 +5,30 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+@SuppressWarnings("serial")
 public class OrderManagementFrame extends JFrame{
+	OrderPanel currentSelectedPanel;
+	
 	//project 3 part
-	private OrderList OL = new OrderList("Order-normal.txt");
+	OrderList OL = new OrderList("Order-normal.txt");
+	//OrderList OL = new OrderList("test4.txt");
 	
 	//project 5 part
 	private boolean isAddOpen = false;
+	private boolean isSortDate = false;
+	private boolean isChangeMode = false;
 	
 	private JPanel mainPanel = new JPanel();
 	private JPanel centerPanel = new JPanel();
@@ -39,15 +50,13 @@ public class OrderManagementFrame extends JFrame{
 	private JLabel menuItemStatus = new MyLabel("Status",80,40);
 	
 	private JPanel ordersPanel = new JPanel();
-	private JScrollPane orderScrollPanel = new JScrollPane(ordersPanel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	private JScrollPane orderScrollPanel = new JScrollPane(ordersPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	
 	private JButton addBtn = new MyButton("ADD");
 	private JButton sortBtn = new MyButton("SORT BY\nDATE/CUSTOMER");
 	private JButton changeBtn = new MyButton("CHANGE/DONE");
 	private JButton saveBtn = new MyButton("SAVE");
-	
-	private InputFrame inputFrame;
-	
+
 	public OrderManagementFrame() {
 		setTitle("Order Management");
 		setSize(1280, 600);
@@ -104,12 +113,89 @@ public class OrderManagementFrame extends JFrame{
 				if(isAddOpen) {} 
 				else {
 					isAddOpen = true;
-					inputFrame = new InputFrame();
+					new InputFrame();
 				}
 			}
 		});
 		
-
+		sortBtn.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentSelectedPanel = null;
+				if(isSortDate) {
+					isSortDate = false;
+					OL.sortByCustomer();
+					ordersPanel.removeAll();
+					readOrders();	
+				} 
+				else {
+					isSortDate = true;
+					OL.sortByDate();
+					ordersPanel.removeAll();
+					readOrders();
+				}
+			}
+		});
+		
+		changeBtn.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(currentSelectedPanel != null) {
+					if(isChangeMode) {	//in change mode
+						isChangeMode = false;
+						currentSelectedPanel.setBorderBlack();
+						currentSelectedPanel.endEdit();
+						currentSelectedPanel = null;
+						//OL.print();
+					} else {			//not in change mode
+						isChangeMode = true;
+						currentSelectedPanel.setBorderYellow();
+						currentSelectedPanel.startEdit();
+					}
+				} else {
+					System.out.println("selected nothing");
+				}
+			}
+		});
+		
+		saveBtn.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("SAVE Btn Clicked!");
+				JFileChooser fc = new JFileChooser(new File("C:\\"));
+				FileFilter filter = new FileNameExtensionFilter("Text file", new String[] {"txt"});
+				fc.setFileFilter(filter);
+				fc.setDialogTitle("Save text file");
+				int result = fc.showSaveDialog(null);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					try {
+						FileWriter fw = new FileWriter(fc.getSelectedFile() + ".txt");
+						fw.write(makeStringForSave());
+						fw.close();
+					} catch (Exception err) {
+						System.out.println(err.getMessage());
+					}
+					
+				}
+			}
+		});
+	}
+	
+	public String makeStringForSave() {
+		String str = "// Order List\n"+
+				"// Format - ID :: Buyer :: Time :: Amount :: Ordered Item List :: Ship Address\n" +
+				"// Status - CANCELED: 1, PREPARING: 2, SHIPPED:3, DELIVERED: 4, RETURNED: 5;\n";
+		//202302101310001  :: Bim :: 2023-02-10_13:10 :: 30000 :: 2005;T-Shirt;20000;CANCELED : 1001;Apple;10000;DELIVERED :: Dept. Software
+		for(int i=0;i<OL.arr.size();i++) {
+			Order tempO = OL.getOrder(i);
+			String date = tempO.time.toString();
+			String itemStr = "";
+			for(int j=0;tempO.itemArr[j] !=null;j++) {
+				Item tempI = tempO.itemArr[j];
+				itemStr = itemStr + tempI.ID + ";" + tempI.name + ";" + tempI.price + ";" + tempI.state + ":";
+			}
+			itemStr = itemStr.substring(0,itemStr.length()-1);
+			str = str + "//\n" + tempO.ID + "::" + tempO.name + "::" + date.substring(0,10) + "_" + date.substring(11) + "::" + tempO.price + "::" + itemStr + "::" + tempO.address + "\n";
+		}
+		
+		return str;
 	}
 	
 	public void addTestOrders() {
@@ -129,8 +215,8 @@ public class OrderManagementFrame extends JFrame{
 		*/
 	}
 	
-	public void addOrderPanel(String id, String name, String date, String price, String address, Item[] items) {
-		OrderPanel tempOP = new OrderPanel(id, name, date, price, address, items);
+	public void addOrderPanel(Order o) {
+		OrderPanel tempOP = new OrderPanel(o);
 		ordersPanel.add(tempOP);
 		ordersPanel.revalidate();
 	}
@@ -140,8 +226,16 @@ public class OrderManagementFrame extends JFrame{
 		for(int i =0;i<OL.numOrders();i++) {
 			tempO = OL.getOrder(i);
 			//tempO.print();
-			addOrderPanel(tempO.ID,tempO.name,tempO.time.toString(),"" + tempO.price,tempO.adress,tempO.itemArr);
+			addOrderPanel(tempO);
 			//System.out.println("add "+i+" order panel");
 		}
+	}
+	
+	public void setIsAddOpen(boolean b) {
+		this.isAddOpen = b; 
+	}
+	
+	public void addOrderToOL(Order o) {
+		OL.arr.add(o);
 	}
 }
