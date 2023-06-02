@@ -85,4 +85,23 @@ public class OrderList {
 	    }
 	}
 	
+	public String makeStringForSave() {
+		String str = "// Order List\n"+
+				"// Format - ID :: Buyer :: Time :: Amount :: Ordered Item List :: Ship Address\n" +
+				"// Status - CANCELED: 1, PREPARING: 2, SHIPPED:3, DELIVERED: 4, RETURNED: 5;\n";
+		//202302101310001  :: Bim :: 2023-02-10_13:10 :: 30000 :: 2005;T-Shirt;20000;CANCELED : 1001;Apple;10000;DELIVERED :: Dept. Software
+		for(int i=0;i<arr.size();i++) {
+			Order tempO = getOrder(i);
+			String date = tempO.time.toString();
+			String itemStr = "";
+			for(int j=0;tempO.itemArr[j] !=null;j++) {
+				Item tempI = tempO.itemArr[j];
+				itemStr = itemStr + tempI.ID + ";" + tempI.name + ";" + tempI.price + ";" + tempI.state + ":";
+			}
+			itemStr = itemStr.substring(0,itemStr.length()-1);
+			str = str + "//\n" + tempO.ID + "::" + tempO.name + "::" + date.substring(0,10) + "_" + date.substring(11) + "::" + tempO.price + "::" + itemStr + "::" + tempO.address + "\n";
+		}
+		
+		return str;
+	}
 }

@@ -70,16 +70,13 @@ public class OrderPanel extends JPanel{
 	private static Border blackline = BorderFactory.createLineBorder(Color.black);
 	private static Border redline = BorderFactory.createLineBorder(Color.red,2);
 	private static Border yellowline = BorderFactory.createLineBorder(Color.yellow,2);
-	
-	public OrderPanel() {
-		addMouseListener(ML);
-	}
-	
+
 	public OrderPanel(Order o) {
 		srcOrder = o;
+		
 		idLabel = new MyLabel(o.ID,130, 90);
 		nameLabel = new MyLabel(o.name,130, 90);
-		dateLabel = new MyLabel(""+o.time,130, 90);
+		dateLabel = new MyLabel(""+o.time,120, 90);
 		priceLabel = new MyLabel(""+o.price,130, 90);
 		addressTF = new JTextField(o.address);
 		addressTF.setPreferredSize(new Dimension(110, 90));
@@ -91,7 +88,6 @@ public class OrderPanel extends JPanel{
 
 		for(int i=0;o.itemArr[i] != null;i++) {
 			tempIP = new ItemPanel(o.itemArr[i]);
-			tempIP.setBorder(blackline);
 			itemArr[i] = tempIP;
 			itemPanel.add(tempIP);
 		}

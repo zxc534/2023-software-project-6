@@ -8,6 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -24,6 +25,7 @@ public class InputFrame extends JFrame{
 	
 	private Order tempO = new Order();
 	
+	//Frame Components
 	private JPanel mainPanel = new JPanel();
 	private JPanel upPanel = new JPanel();
 	private JPanel downPanel = new JPanel();
@@ -37,8 +39,9 @@ public class InputFrame extends JFrame{
 	private JTextField shippingAddressTF = new JTextField();
 	
 	private JPanel downMenuPanel = new JPanel();
+	private JPanel downContentOuterPanel = new JPanel();
 	private JPanel downContentPanel = new JPanel();
-	private JScrollPane downScrollPanel = new JScrollPane(downContentPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	private JScrollPane downScrollPanel = new JScrollPane(downContentOuterPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	private JLabel itemIDLabel = new MyLabel("Item ID",100, 30);
 	private JLabel itemNameLabel = new MyLabel("Item Name",255, 30);
 	private JLabel itemPriceLabel = new MyLabel("Item Price",255, 30);
@@ -63,13 +66,6 @@ public class InputFrame extends JFrame{
 		setLayout(new FlowLayout());
 		setVisible(true);
 		
-		addWindowListener(new WindowAdapter(){
-            public void windowClosing(WindowEvent e) { 
-            		Main.mainFrame.setIsAddOpen(false);
-                    dispose();
-            }
-		});
-		
 		//upPanel.setBackground(Color.BLUE);
 		//downPanel.setBackground(Color.RED);
 		//btnPanel.setBackground(Color.YELLOW);
@@ -77,12 +73,12 @@ public class InputFrame extends JFrame{
 		mainPanel.setLayout(new BorderLayout());
 		upPanel.setLayout(new GridLayout(2,1));
 		downMenuPanel.setLayout(new FlowLayout());
-		downContentPanel.setLayout(new GridLayout(0,1));
+		downContentPanel.setLayout(new BoxLayout(downContentPanel, BoxLayout.Y_AXIS));
 		
 		upPanel.setPreferredSize(new Dimension(880, 105));
 		downPanel.setPreferredSize(new Dimension(640, 250));
 		btnPanel.setPreferredSize(new Dimension(240, 250));
-		
+
 		downScrollPanel.setPreferredSize(new Dimension(625, 185));
 		
 		buyerNameLabel.setPreferredSize(new Dimension(110, 45));
@@ -90,6 +86,8 @@ public class InputFrame extends JFrame{
 		shippingAddressLabel.setPreferredSize(new Dimension(110, 45));
 		shippingAddressTF.setPreferredSize(new Dimension(750, 45));
 		
+		
+		downContentOuterPanel.add(downContentPanel);
 		add(mainPanel);
 		
 		mainPanel.add(upPanel,BorderLayout.NORTH);
@@ -141,11 +139,18 @@ public class InputFrame extends JFrame{
 				}
 				tempO.ID = ""+t.getYear()+String.format("%02d",t.getMonthValue())+String.format("%02d",t.getDayOfMonth())+String.format("%02d",t.getHour())+String.format("%02d",t.getMinute())+String.format("%03d",createCount);
 				//tempO.print();
-				Main.mainFrame.addOrderToOL(tempO);
+				Main.OL.arr.add(tempO);
 				Main.mainFrame.addOrderPanel(tempO);
 				Main.mainFrame.setIsAddOpen(false);
 				dispose();
 			}
+		});
+		
+		addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e) { 
+            		Main.mainFrame.setIsAddOpen(false);
+                    dispose();
+            }
 		});
 	}
 	
